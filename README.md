@@ -1,3 +1,0 @@
-# skybaimex.github.io
-
-## skynet
