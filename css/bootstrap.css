@@ -12053,3 +12053,16 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+
+  .custume1 {
+    text-align: center;
+    position: static;
+    margin-top: 0px;
+  }
+  .by{
+    text-align: center;
+    position: relative;
+    margin: 10 10 10 10;
+    display: contents;
+    font-size: 12px;
+  }
