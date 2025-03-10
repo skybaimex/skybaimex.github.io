@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Test</title>
+</head>
+<body>
+    <h2>Web Worker Performance Test</h2>
+    <button onclick="runMainThread()">Run on Main Thread</button>
+    <button onclick="runWorkerThread()">Run on Worker Thread</button>
+    <p id="output"></p>
+
+    <script>
+        let num = 100000000; // Beban perhitungan (bisa diubah)
+
+        // Tes tanpa Web Worker (Main Thread)
+        function runMainThread() {
+            let output = document.getElementById("output");
+            output.textContent = "Processing in main thread...";
+            let startTime = performance.now();
+            let result = 0;
+
+            for (let i = 0; i < num; i++) {
+                result += Math.sqrt(i);
+            }
+
+            let endTime = performance.now();
+            output.textContent = `Main thread done in ${(endTime - startTime).toFixed(2)} ms`;
+        }
+
+        // Tes dengan Web Worker
+        function runWorkerThread() {
+            if (window.Worker) {
+                let output = document.getElementById("output");
+                output.textContent = "Processing in Web Worker...";
+                let startTime = performance.now();
+
+                let worker = new Worker("worker.js");
+                worker.postMessage(num);
+
+                worker.onmessage = function(event) {
+                    let endTime = performance.now();
+                    output.textContent = `Worker thread done in ${(endTime - startTime).toFixed(2)} ms`;
+                };
+            } else {
+                alert("Web Workers not supported in this browser.");
+            }
+        }
+    </script>
+</body>
+</html>
