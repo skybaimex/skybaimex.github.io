@@ -41,7 +41,7 @@
 
                 worker.onmessage = function(event) {
                     let endTime = performance.now();
-                    output.textContent = `Worker thread done in ${(endTime - startTime).toFixed(2)} ms`;
+                    output.textContent = `Worker thread berhasil ${(endTime - startTime).toFixed(2)} ms`;
                 };
             } else {
                 alert("Web Workers not supported in this browser.");
