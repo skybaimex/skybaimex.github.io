@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uji Performa Multi Worker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Uji Performa Multi Worker</h1>
+        <p class="description">
+            Program ini menguji performa perhitungan bilangan prima menggunakan Web Workers.
+        </p>
+        
+        <div class="control-group">
+            <label for="maxNumber">Batas Angka Maksimum:</label>
+            <input type="number" id="maxNumber" value="15000000" min="10000" max="50000000">
+        </div>
+        
+        <div class="control-group">
+            <label for="workerCount">Jumlah Worker:</label>
+            <select id="workerCount">
+                <option value="2">2 Workers</option>
+                <option value="4" selected>4 Workers</option>
+                <option value="8">8 Workers</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="calcType">Tipe Perhitungan:</label>
+            <select id="calcType">
+                <option value="prima" selected>Bilangan Prima</option>
+            </select>
+        </div>
+        
+        <button id="startBtn">Mulai Perhitungan</button>
+        
+        <div class="progress-container">
+            <h3>Progress</h3>
+            <div id="progressPercent">0%</div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="workers-container" id="workersContainer">
+            <!-- Worker cards will be generated here -->
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="results">
+            <div class="result-item">
+                <span class="result-label">Total Bilangan Prima:</span><br>
+                <span class="result-value" id="totalPrimes">0</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Waktu Eksekusi:</span><br>
+                <span class="result-value" id="executionTime">0 detik</span>
+            </div>
+            
+            <div class="result-item">
+                <span class="result-label">Kecepatan:</span><br>
+                <span class="result-value speed-value" id="calculationSpeed">0 angka/detik</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
