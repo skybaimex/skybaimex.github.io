@@ -1,6 +1,7 @@
 // Menambahkan efek suara dan interaksi
 const buttons = document.querySelectorAll('.menu-btn');
 const coreToolsBtn = document.getElementById('coreToolsBtn');
+const aboutBtn = document.getElementById('aboutBtn');
 
 // Efek suara (opsional)
 const hoverSound = new Audio('data:audio/wav;base64,UklGRpQFAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YXAFAACAgICAgICAgICAgICAgICAgICAgICAgID///////////////////////////////////////////////////////////////////////////////////////////////////////////////////8A');
@@ -40,6 +41,18 @@ coreToolsBtn.addEventListener('click', () => {
   // Redirect ke halaman Core Tools setelah jeda singkat
   setTimeout(() => {
     window.location.href = '/Core Tools/index.html';
+  }, 500);
+});
+
+// Fungsi untuk navigasi ke halaman Core Tools
+aboutBtn.addEventListener('click', () => {
+  // Tambahkan animasi loading sebelum redirect
+  aboutBtn.innerHTML = 'Loading...';
+  aboutBtn.style.opacity = '0.8';
+  
+  // Redirect ke halaman Core Tools setelah jeda singkat
+  setTimeout(() => {
+    window.location.href = '/about/about.html';
   }, 500);
 });
 

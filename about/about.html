@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumentasi Core Tools - Uji Performa Multi Core</title>
+    <style>
+        /* CSS untuk styling dokumentasi */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 210mm; /* A4 width */
+            min-height: 297mm; /* A4 height */
+            margin: 0 auto;
+            background: white;
+            padding: 20mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin: 25px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        h3 {
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul, ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        code {
+            background-color: #f8f9fa;
+            border: 1px solid #eaecf0;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            border: 1px solid #eaecf0;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 20px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .code-header {
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: -1px;
+        }
+        
+        .note {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning {
+            background-color: #ffecb3;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .print-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .print-button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .print-button {
+                display: none;
+            }
+            
+            .note, .warning {
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dokumentasi Core Tools</h1>
+            <p>Uji Performa Multi Core dengan Web Workers</p>
+        </header>
+        
+        <div class="button-container">
+            <button class="print-button" onclick="window.print()">GET PDF</button>
+        </div>
+        
+        <h2>Gambaran Umum</h2>
+        <p>Project Core Tools adalah aplikasi web yang dirancang untuk menguji performa CPU dengan memanfaatkan Web Workers untuk melakukan perhitungan berat secara paralel menggunakan multi-core processor.</p>
+        
+        <h2>Struktur Project</h2>
+        <pre>
+Project Root/
+├── index.html              (Halaman utama menu)
+├── index/
+│   ├── style.css          (Styling untuk halaman utama)
+│   └── script.js          (JavaScript untuk halaman utama)
+└── Core Tools/
+    ├── index.html         (Halaman uji performa)
+    ├── style.css          (Styling untuk halaman uji)
+    └── script.js          (JavaScript untuk halaman uji)
+        </pre>
+        
+        <h2>Fitur Utama</h2>
+        
+        <h3>1. Halaman Utama (Menu)</h3>
+        <ul>
+            <li>Desain dark mode modern dengan efek cahaya latar belakang</li>
+            <li>Animasi hover pada tombol menu</li>
+            <li>Navigasi ke halaman Core Tools</li>
+        </ul>
+        
+        <h3>2. Halaman Core Tools</h3>
+        <ul>
+            <li>Pilihan tingkat kesulitan perhitungan (Low, Medium, High, Infinity)</li>
+            <li>Pilihan jumlah core (1-16 core)</li>
+            <li>Pilihan jenis perhitungan (Bilangan Prima / Monte Carlo Pi)</li>
+            <li>Monitoring real-time progress tiap core</li>
+            <li>Tampilan hasil performa (waktu eksekusi, kecepatan)</li>
+        </ul>
+        
+        <h2>Implementasi Web Workers</h2>
+        <p>Aplikasi menggunakan Web Workers untuk melakukan komputasi paralel:</p>
+        
+        <h3>1. Inisialisasi Workers</h3>
+        <div class="code-block">
+            <div class="code-header">JavaScript</div>
+            <pre>
+function createWorker(calcType) {
+  let workerCode = '';
+  // Kode worker dibuat secara dinamis berdasarkan jenis perhitungan
+  const blob = new Blob([workerCode], { type: 'application/javascript' });
+  return new Worker(URL.createObjectURL(blob));
+}
+            </pre>
+        </div>
+        
+        <h3>2. Pembagian Tugas</h3>
+        <p>Untuk perhitungan bilangan prima, tugas dibagi berdasarkan rentang angka:</p>
+        <div class="code-block">
+            <div class="code-header">JavaScript</div>
+            <pre>
+const chunkSize = Math.ceil(maxNumber / workerCount);
+const start = i * chunkSize + 1;
+const end = Math.min((i + 1) * chunkSize, maxNumber);
+            </pre>
+        </div>
+        
+        <h3>3. Algoritma Perhitungan</h3>
+        
+        <h4>Bilangan Prima</h4>
+        <p>Menggunakan algoritma optimized trial division:</p>
+        <div class="code-block">
+            <div class="code-header">JavaScript</div>
+            <pre>
+function isPrime(n) {
+  if (n <= 1) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+  
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) return false;
+  }
+  return true;
+}
+            </pre>
+        </div>
+        
+        <h4>Monte Carlo Pi</h4>
+        <p>Menggunakan metode Monte Carlo untuk aproksimasi π:</p>
+        <div class="code-block">
+            <div class="code-header">JavaScript</div>
+            <pre>
+function monteCarloPi(numPoints) {
+  let insideCircle = 0;
+  
+  for (let i = 0; i < numPoints; i++) {
+    const x = Math.random();
+    const y = Math.random();
+    
+    if (x * x + y * y <= 1) {
+      insideCircle++;
+    }
+  }
+  
+  return insideCircle;
+}
+            </pre>
+        </div>
+        
+        <h2>Cara Penggunaan</h2>
+        <ol>
+            <li>Buka halaman utama (index.html)</li>
+            <li>Klik tombol "Core Tools"</li>
+            <li>Atur parameter pengujian:
+                <ul>
+                    <li>Batas Maksimum: Menentukan kompleksitas perhitungan</li>
+                    <li>Jumlah Core: Menentukan banyaknya worker yang akan dibuat</li>
+                    <li>Tipe Perhitungan: Pilih jenis algoritma yang akan diuji</li>
+                </ul>
+            </li>
+            <li>Klik "Mulai Perhitungan"</li>
+            <li>Pantau progress dan hasil di panel yang tersedia</li>
+        </ol>
+        
+        <h2>Hasil dan Metrik</h2>
+        <p>Aplikasi memberikan beberapa metrik performa:</p>
+        <ul>
+            <li><strong>Total Bilangan Prima/Pi</strong>: Hasil perhitungan</li>
+            <li><strong>Waktu Eksekusi</strong>: Total waktu yang dibutuhkan</li>
+            <li><strong>Kecepatan</strong>: Operasi per detik (angka/detik atau titik/detik)</li>
+        </ul>
+        
+        <h2>Teknologi yang Digunakan</h2>
+        <ul>
+            <li>HTML5</li>
+            <li>CSS3 (Flexbox, Grid, Animations)</li>
+            <li>JavaScript ES6+</li>
+            <li>Web Workers API</li>
+            <li>Blob API untuk membuat worker dinamis</li>
+        </ul>
+        
+        <h2>Browser Support</h2>
+        <p>Aplikasi ini bekerja optimal pada browser modern yang mendukung:</p>
+        <ul>
+            <li>Web Workers</li>
+            <li>ES6+ JavaScript features</li>
+            <li>CSS Grid dan Flexbox</li>
+        </ul>
+        
+        <div class="note">
+            <strong>Catatan Penting:</strong> 
+            <ol>
+                <li>Penggunaan core dalam jumlah banyak mungkin tidak memberikan peningkatan performa linear karena overhead komunikasi dengan worker</li>
+                <li>Perhitungan dengan batas sangat tinggi (Infinity) dapat memakan waktu lama dan membebani CPU</li>
+                <li>Beberapa browser mungkin membatasi jumlah worker yang dapat dibuat secara bersamaan</li>
+            </ol>
+        </div>
+        
+        <h2>Potensi Pengembangan</h2>
+        <ol>
+            <li>Penambahan jenis perhitungan lainnya</li>
+            <li>Visualisasi progress yang lebih detail</li>
+            <li>Ekspor hasil pengujian</li>
+            <li>Benchmarking dan perbandingan hasil antar perangkat</li>
+            <li>Penambahan WebAssembly untuk perhitungan yang lebih intensif</li>
+        </ol>
+        
+        <div class="footer">
+            <p>© 2023 Core Tools Performance Testing App</p>
+            <p>Dokumentasi ini terakhir diperbarui pada: 20 November 2023</p>
+        </div>
+    </div>
+</body>
+</html>
