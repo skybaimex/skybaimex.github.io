@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Elements
   const startBtn = document.getElementById('startBtn');
+  const stopBtn = document.getElementById('stopBtn');
   const maxNumberInput = document.getElementById('maxNumber');
   const workerCountSelect = document.getElementById('workerCount');
   const calcTypeSelect = document.getElementById('calcType');
@@ -9,11 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalPrimesElement = document.getElementById('totalPrimes');
   const executionTimeElement = document.getElementById('executionTime');
   const calculationSpeedElement = document.getElementById('calculationSpeed');
+  const resultLabel1 = document.getElementById('resultLabel1');
+  const resultLabel2 = document.getElementById('resultLabel2');
   
   // State
   let workers = [];
   let startTime;
   let isRunning = false;
+  let stopRequested = false;
   
   // Initialize worker cards
   function initializeWorkerCards(count) {
@@ -22,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const workerCard = document.createElement('div');
       workerCard.className = 'worker-card';
       workerCard.innerHTML = `
-                <div class="worker-id">Worker ${i + 1}</div>
+                <div class="worker-id">Core ${i + 1}</div>
                 <div class="worker-status">Menunggu</div>
                 <div class="worker-time">-</div>
             `;
@@ -39,7 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const timeElem = card.querySelector('.worker-time');
       
       statusElem.textContent = status;
-      statusElem.style.color = status === 'Selesai' ? '#27ae60' : '#e67e22';
+      
+      // Set color based on status
+      if (status === 'Selesai') {
+        statusElem.style.color = '#27ae60';
+      } else if (status === 'Dibatalkan') {
+        statusElem.style.color = '#e74c3c';
+        statusElem.classList.add('cancelled-status');
+      } else {
+        statusElem.style.color = '#e67e22';
+      }
       
       if (time > 0) {
         timeElem.textContent = `${time.toFixed(2)} detik`;
@@ -61,9 +74,29 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
   
-  // Create worker
-  function createWorker() {
-    const workerCode = `
+  // Monte Carlo Pi approximation
+  function monteCarloPi(numPoints) {
+    let insideCircle = 0;
+    
+    for (let i = 0; i < numPoints; i++) {
+      const x = Math.random();
+      const y = Math.random();
+      
+      // Check if point is inside the circle
+      if (x * x + y * y <= 1) {
+        insideCircle++;
+      }
+    }
+    
+    return insideCircle;
+  }
+  
+  // Create worker based on calculation type
+  function createWorker(calcType) {
+    let workerCode = '';
+    
+    if (calcType === 'prima') {
+      workerCode = `
             ${isPrime.toString()}
             
             self.onmessage = function(e) {
@@ -77,6 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 self.postMessage(result);
             };
         `;
+    } else if (calcType === 'montecarlo') {
+      workerCode = `
+            ${monteCarloPi.toString()}
+            
+            self.onmessage = function(e) {
+                const { numPoints } = e.data;
+                const result = monteCarloPi(numPoints);
+                self.postMessage(result);
+            };
+        `;
+    }
     
     const blob = new Blob([workerCode], { type: 'application/javascript' });
     return new Worker(URL.createObjectURL(blob));
@@ -88,8 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Reset state
     isRunning = true;
+    stopRequested = false;
     workers = [];
+    startBtn.classList.add('hidden');
+    stopBtn.classList.remove('hidden');
     startBtn.disabled = true;
+    stopBtn.disabled = false;
     progressPercent.textContent = '0%';
     totalPrimesElement.textContent = '0';
     executionTimeElement.textContent = '0 detik';
@@ -98,6 +146,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const maxNumber = parseInt(maxNumberInput.value);
     const workerCount = parseInt(workerCountSelect.value);
     const calcType = calcTypeSelect.value;
+    
+    // Update UI labels based on calculation type
+    if (calcType === 'prima') {
+      resultLabel1.textContent = 'Total Bilangan Prima:';
+      resultLabel2.textContent = 'Kecepatan:';
+    } else if (calcType === 'montecarlo') {
+      resultLabel1.textContent = 'Perkiraan Nilai Pi:';
+      resultLabel2.textContent = 'Kecepatan:';
+    }
     
     // Initialize UI
     initializeWorkerCards(workerCount);
@@ -114,19 +171,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Create workers
     for (let i = 0; i < workerCount; i++) {
-      const worker = createWorker();
+      const worker = createWorker(calcType);
       workers.push(worker);
       
-      // Calculate chunk
-      const chunkSize = Math.ceil(maxNumber / workerCount);
-      const start = i * chunkSize + 1;
-      const end = Math.min((i + 1) * chunkSize, maxNumber);
+      // Calculate chunk based on calculation type
+      let workerData;
+      if (calcType === 'prima') {
+        const chunkSize = Math.ceil(maxNumber / workerCount);
+        const start = i * chunkSize + 1;
+        const end = Math.min((i + 1) * chunkSize, maxNumber);
+        workerData = { start, end };
+      } else if (calcType === 'montecarlo') {
+        const pointsPerWorker = Math.ceil(maxNumber / workerCount);
+        workerData = { numPoints: pointsPerWorker };
+      }
       
       updateWorkerCard(i, 'Memproses');
-      
-      worker.postMessage({ start, end });
+      worker.postMessage(workerData);
       
       worker.onmessage = function(e) {
+        // Skip processing if stop requested
+        if (stopRequested) return;
+        
         const workerIndex = workers.indexOf(worker);
         const workerTime = (performance.now() - startTime) / 1000;
         
@@ -144,27 +210,68 @@ document.addEventListener('DOMContentLoaded', () => {
           const endTime = performance.now();
           const totalTime = (endTime - startTime) / 1000;
           
-          // Update results
-          totalPrimesElement.textContent = totalResult.toLocaleString();
+          // Update results based on calculation type
+          if (calcType === 'prima') {
+            totalPrimesElement.textContent = totalResult.toLocaleString();
+            calculationSpeedElement.textContent =
+              `${Math.round(maxNumber / totalTime).toLocaleString()} angka/detik`;
+          } else if (calcType === 'montecarlo') {
+            const piApproximation = (4 * totalResult) / maxNumber;
+            totalPrimesElement.textContent = piApproximation.toFixed(10);
+            calculationSpeedElement.textContent =
+              `${Math.round(maxNumber / totalTime).toLocaleString()} titik/detik`;
+          }
+          
           executionTimeElement.textContent = `${totalTime.toFixed(2)} detik`;
-          calculationSpeedElement.textContent =
-            `${Math.round(maxNumber / totalTime).toLocaleString()} angka/detik`;
           
           // Terminate workers
           workers.forEach(w => w.terminate());
           workers = [];
           isRunning = false;
+          
+          // Reset buttons
           startBtn.disabled = false;
+          stopBtn.classList.add('hidden');
+          startBtn.classList.remove('hidden');
         }
       };
       
       worker.onerror = function(error) {
-        console.error('Worker error:', error);
-        alert(`Worker error: ${error.message}`);
+        console.error('Core error:', error);
+        alert(`Core error: ${error.message}`);
         isRunning = false;
+        stopRequested = true;
         startBtn.disabled = false;
+        stopBtn.disabled = true;
+        stopBtn.classList.add('hidden');
+        startBtn.classList.remove('hidden');
       };
     }
+  }
+  
+  // Stop calculation
+  function stopCalculation() {
+    if (!isRunning) return;
+    
+    stopRequested = true;
+    stopBtn.disabled = true;
+    
+    // Terminate all workers and update UI
+    workers.forEach((worker, index) => {
+      worker.terminate();
+      const workerTime = (performance.now() - startTime) / 1000;
+      updateWorkerCard(index, 'Dibatalkan', workerTime);
+    });
+    
+    workers = [];
+    isRunning = false;
+    
+    // Reset UI
+    setTimeout(() => {
+      startBtn.disabled = false;
+      stopBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+    }, 500);
   }
   
   // Initialize worker cards based on default selection
@@ -172,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Event listeners
   startBtn.addEventListener('click', startCalculation);
+  stopBtn.addEventListener('click', stopCalculation);
   workerCountSelect.addEventListener('change', function() {
     initializeWorkerCards(parseInt(this.value));
   });

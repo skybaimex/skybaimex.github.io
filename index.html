@@ -3,45 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Uji Performa Multi Worker</title>
+    <title>Uji Performa Multi Core</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Uji Performa Multi Worker</h1>
+        <h1>Uji Performa Multi Core</h1>
         <p class="description">
-            Program ini menguji performa perhitungan bilangan prima menggunakan Web Workers.
+            Program ini menguji performa perhitungan menggunakan Web Core.
         </p>
         
         <div class="control-group">
-            <label for="maxNumber">Batas Angka Maksimum:</label>
-            <select name="maxNumber" id="maxNumber">
-                <option value="900000">standar</option>
-                <option value="95000000"selected>medium</option>
-                <option value="900000000">hight</option>
+            <label for="maxNumber">Batas Maksimum:</label>
+            <select id="maxNumber">
+                <option value="500000000">Low</option>
+                <option value="4500000000" selected>Medium</option>
+                <option value="8500000000">High</option>
+                <option value="87000000000">Infinity</option>
             </select>
         </div>
         
         <div class="control-group">
-            <label for="workerCount">Jumlah Worker:</label>
+            <label for="workerCount">Jumlah Core:</label>
             <select id="workerCount">
-                <option value="2">2 Workers</option>
-                <option value="4" selected>4 Workers</option>
-                <option value="8">8 Workers</option>
-                <option value="12">12 Workers</option>
-                <option value="16">16 Workers</option>
-                <option value="24">24 Workers</option>
-            </select>
-        </div>
+                <option value="1">Single Core (1)</option>
+    <option value="2">Dual Core (2)</option>
+    <option value="4" selected>Quad Core (4)</option>
+    <option value="6">Hexa Core (6)</option>
+    <option value="8">Octa Core (8)</option>
+    <option value="12">Dodeca Core (12)</option>
+    <option value="16">Hexadeca Core (16)</option>
+</select>
+            </div>
         
         <div class="control-group">
             <label for="calcType">Tipe Perhitungan:</label>
             <select id="calcType">
-                <option value="prima" selected>Bilangan Prima</option>
+                <option value="prima">Bilangan Prima</option>
+                <option value="montecarlo" selected >Monte Carlo (Pi Approximation)</option>
             </select>
         </div>
         
         <button id="startBtn">Mulai Perhitungan</button>
+        <button id="stopBtn" class="stop-btn hidden">Hentikan</button>
         
         <div class="progress-container">
             <h3>Progress</h3>
@@ -51,14 +55,14 @@
         <div class="divider"></div>
         
         <div class="workers-container" id="workersContainer">
-            <!-- Worker cards will be generated here -->
+            <!-- Core cards will be generated here -->
         </div>
         
         <div class="divider"></div>
         
         <div class="results">
             <div class="result-item">
-                <span class="result-label">Total Bilangan Prima:</span><br>
+                <span class="result-label" id="resultLabel1">Total Bilangan Prima:</span><br>
                 <span class="result-value" id="totalPrimes">0</span>
             </div>
             
@@ -68,7 +72,7 @@
             </div>
             
             <div class="result-item">
-                <span class="result-label">Kecepatan:</span><br>
+                <span class="result-label" id="resultLabel2">Kecepatan:</span><br>
                 <span class="result-value speed-value" id="calculationSpeed">0 angka/detik</span>
             </div>
         </div>
